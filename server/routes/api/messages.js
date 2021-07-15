@@ -13,8 +13,17 @@ router.post("/", async (req, res, next) => {
 
     // if we already know conversation id, we can save time and just add it to message and return
     if (conversationId) {
+      const convoFromDatabase = await Conversation.findByPk(conversationId);
+
+      // if the conversation in the database does not include the senderId, then
+      // this conversation does not involve the sender
+      if (convoFromDatabase.user1Id != senderId || convoFromDatabase.user2Id != senderId) {
+        return res.sendStatus(401);
+      }
+
       const message = await Message.create({ senderId, text, conversationId });
       return res.json({ message, sender });
+        
     }
     // if we don't have conversation id, find a conversation to make sure it doesn't already exist
     let conversation = await Conversation.findConversation(
