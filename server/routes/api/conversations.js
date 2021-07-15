@@ -20,7 +20,7 @@ router.get("/", async (req, res, next) => {
         },
       },
       attributes: ["id"],
-      order: [[Message, "createdAt", "DESC"]],
+      order: [[Message, "createdAt", "ASC"]],
       include: [
         { model: Message, order: ["createdAt", "DESC"] },
         {
@@ -47,7 +47,15 @@ router.get("/", async (req, res, next) => {
         },
       ],
     });
+    
+    // sorting conversations by the date of their last message
+    function compareConvos(a, b) {
+      const lastAMessage = a.messages[a.messages.length - 1]
+      const lastBMessage = b.messages[b.messages.length - 1]
 
+      return new Date(lastAMessage.createdAt) - new Date(lastBMessage.createdAt)
+    }
+    conversations.sort(compareConvos)
     for (let i = 0; i < conversations.length; i++) {
       const convo = conversations[i];
       const convoJSON = convo.toJSON();
@@ -69,7 +77,7 @@ router.get("/", async (req, res, next) => {
       }
 
       // set properties for notification count and latest message preview
-      convoJSON.latestMessageText = convoJSON.messages[0].text;
+      convoJSON.latestMessageText = convoJSON.messages[convoJSON.messages.length - 1].text;
       conversations[i] = convoJSON;
     }
 
