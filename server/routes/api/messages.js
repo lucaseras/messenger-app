@@ -18,7 +18,7 @@ router.post("/", async (req, res, next) => {
       // if the conversation in the database does not include the senderId, then
       // this conversation does not involve the sender
       if (convoFromDatabase.user1Id != senderId && convoFromDatabase.user2Id != senderId) {
-        return res.sendStatus(401);
+        return res.sendStatus(403);
       }
 
       const message = await Message.create({ senderId, text, conversationId });
