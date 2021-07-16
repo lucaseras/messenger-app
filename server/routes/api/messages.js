@@ -63,18 +63,6 @@ router.post("/seen", async (req, res, next) => {
     const { seen, conversationId } = req.body;
 
     const convo = await Conversation.findByPk(conversationId)
-    console.log(convo)
-    const messages = await Message.findAll(
-      {
-        where: {
-          [Op.and]: {
-            senderId: seen,
-            conversationId: convo.id
-          }
-        }
-      }
-    )
-    console.log(messages)
 
     // now we update the messages sent by this recipient
     await Message.update(
