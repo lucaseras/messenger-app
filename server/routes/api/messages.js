@@ -79,7 +79,7 @@ router.post("/seen", async (req, res, next) => {
       }
     )
 
-    res.json(seen);
+    res.json(otherUser);
   } catch (error) {
     next(error);
   }
