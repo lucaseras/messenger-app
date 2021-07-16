@@ -15,11 +15,11 @@ const useStyles = makeStyles((theme) => ({
   },
   previewText: {
     fontSize: 12,
-    color: totalNotSeen => !totalNotSeen > 0 && "#9CADC8",
+    color: "secondary",
     letterSpacing: -0.17,
     fontWeight: totalNotSeen => totalNotSeen > 0
-    ? 600
-    : 200,
+    ? "bold"
+    : "regular",
   },
   notification: {
     height: 20,
@@ -52,15 +52,18 @@ const ChatContent = (props) => {
         <Typography className={classes.username}>
           {otherUser.username}
         </Typography>
-        <Typography className={classes.previewText}>
+        <Typography 
+          className={classes.previewText}
+          color={totalNotSeen === 0 ? "secondary" : "black"}>
           {latestMessageText}
         </Typography>
       </Box>
+      { totalNotSeen !== 0 &&
       <Badge 
         className={classes.anchorTopRight} 
         badgeContent={totalNotSeen} 
-        invisible={totalNotSeen <= 0}
         color="primary"/>
+      }
     </Box>
   );
 };
