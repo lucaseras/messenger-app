@@ -120,9 +120,9 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
 };
 
 
-export const updateSeenMessage = (recipientId, conversationId) => async (dispatch) => {
+export const updateSeenMessage = (otherUser, conversationId) => async (dispatch) => {
   try {
-    const { data } = await axios.post(`/api/messages/seen`, {seen: recipientId, conversationId: conversationId})
+    const { data } = await axios.post(`/api/messages/seen`, {otherUser: otherUser, conversationId: conversationId})
     dispatch(setSeenAll(data))
   } catch (error) {
     console.error(error);

@@ -60,7 +60,7 @@ router.post("/seen", async (req, res, next) => {
     if (!req.user) {
       return res.sendStatus(401);
     }
-    const { seen, conversationId } = req.body;
+    const { otherUser, conversationId } = req.body;
 
     const convo = await Conversation.findByPk(conversationId)
 
@@ -72,7 +72,7 @@ router.post("/seen", async (req, res, next) => {
       {
         where: {
           [Op.and]: {
-            senderId: seen,
+            senderId: otherUser,
             conversationId: convo.id
           }
         }
