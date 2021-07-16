@@ -85,6 +85,7 @@ export const addNewConvoToStore = (state, recipientId, message) => {
 export const addSeenAllToStore = (state, id) => {
   return state.map((convo) => {
     if (convo.otherUser.id === id) {
+      console.log("found convo")
       const newConvo = { ...convo }
       newConvo.totalNotSeen = 0
       newConvo.messages =
@@ -92,6 +93,7 @@ export const addSeenAllToStore = (state, id) => {
           message.hasBeenSeen = true
           return message
         })
+      console.log(newConvo)
       return newConvo;
     } else {
       return convo

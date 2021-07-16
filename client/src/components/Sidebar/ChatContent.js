@@ -32,13 +32,26 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     borderRadius: 10,
   },
+  totalNotSeen: {
+    height: 18,
+    minWidth: 18,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#3A8DFF",
+    marginRight: 10,
+    color: "white",
+    fontSize: 11,
+    fontWeight: "Bold",
+    borderRadius: "50%",
+  },
 }));
 
 const ChatContent = (props) => {
   const classes = useStyles();
 
   const { conversation } = props;
-  const { latestMessageText, otherUser } = conversation;
+  const { latestMessageText, otherUser, totalNotSeen } = conversation;
 
   return (
     <Box className={classes.root}>
@@ -50,6 +63,9 @@ const ChatContent = (props) => {
           {latestMessageText}
         </Typography>
       </Box>
+        { totalNotSeen > 0 && 
+        <Typography className={classes.totalNotSeen}> {totalNotSeen} </Typography>
+        }
     </Box>
   );
 };
