@@ -5,9 +5,9 @@ import moment from "moment";
 
 const findLastReadIndex = (messages, userId) => {
   let res = -1
-  for (var index = 0; index < messages.length; index++){
+  for (let index = 0; index < messages.length; index++){
     let message = messages[index]
-    if (message.senderId === userId && !message.hasBeenSeen) {
+    if (message.senderId === userId && !message.isSeen) {
       res = index
       break
     }

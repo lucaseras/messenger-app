@@ -10,11 +10,10 @@ const Message = db.define("message", {
     type: Sequelize.INTEGER,
     allowNull: false,
   },
-  hasBeenSeen: {
+  isSeen: {
     type: Sequelize.BOOLEAN,
     defaultValue: false,
     allowNull: false,
-    
   }
 });
 

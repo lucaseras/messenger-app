@@ -79,7 +79,7 @@ router.get("/", async (req, res, next) => {
       // calculate totalNotSeen total and add it to conversations object
       let totalNotSeen = convo.messages.reduce(
         (acc, message) => 
-        message.senderId === convoJSON.otherUser.id && !message.hasBeenSeen 
+        message.senderId === convoJSON.otherUser.id && !message.isSeen 
         ? acc + 1 
         : acc,
         0)

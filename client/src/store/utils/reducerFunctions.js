@@ -89,7 +89,7 @@ export const addSeenAllToStore = (state, id) => {
       newConvo.totalNotSeen = 0
       newConvo.messages =
         newConvo.messages.map((message) => {
-          message.hasBeenSeen = true
+          message.isSeen = true
           return message
         })
       return newConvo;

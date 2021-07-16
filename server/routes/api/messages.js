@@ -55,19 +55,24 @@ router.post("/", async (req, res, next) => {
 
 // expects { seen, conversationId } in body (seen is the id of the person whose messages were
 // seen)
-router.post("/seen", async (req, res, next) => {
+router.put("/seen", async (req, res, next) => {
   try {
     if (!req.user) {
       return res.sendStatus(401);
     }
+    const senderId = req.user.id;
     const { otherUser, conversationId } = req.body;
 
     const convo = await Conversation.findByPk(conversationId)
 
+      if (convo.user1Id != senderId && convo.user2Id != senderId) {
+        return res.sendStatus(403);
+      }
+
     // now we update the messages sent by this recipient
     await Message.update(
       {
-        hasBeenSeen: true
+        isSeen: true
       },
       {
         where: {
