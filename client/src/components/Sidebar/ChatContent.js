@@ -15,8 +15,11 @@ const useStyles = makeStyles((theme) => ({
   },
   previewText: {
     fontSize: 12,
-    color: "#9CADC8",
+    color: totalNotSeen => !totalNotSeen > 0 && "#9CADC8",
     letterSpacing: -0.17,
+    fontWeight: totalNotSeen => totalNotSeen > 0
+    ? 600
+    : 200,
   },
   notification: {
     height: 20,
@@ -48,10 +51,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ChatContent = (props) => {
-  const classes = useStyles();
-
   const { conversation } = props;
   const { latestMessageText, otherUser, totalNotSeen } = conversation;
+
+  const classes = useStyles(totalNotSeen);
 
   return (
     <Box className={classes.root}>
