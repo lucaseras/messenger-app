@@ -76,6 +76,13 @@ router.get("/", async (req, res, next) => {
         convoJSON.otherUser.online = false;
       }
 
+      // calculate totalNotSeen total and add it to conversations object
+      let totalNotSeen = convo.messages.reduce(
+        (acc, message) => message.senderId === convoJSON.otherUser.id ? acc + 1 : acc,
+        0)
+
+      convoJSON.totalNotSeen = totalNotSeen
+
       // set properties for notification count and latest message preview
       convoJSON.latestMessageText = convoJSON.messages[convoJSON.messages.length - 1].text;
       conversations[i] = convoJSON;
