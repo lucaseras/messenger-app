@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { Box } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { withStyles } from "@material-ui/core/styles";
-import { setActiveChat } from "../../store/activeConversation";
+import { setActiveChat} from "../../store/activeConversation";
+import { setSeenAll } from "../../store/conversations";
 import { connect } from "react-redux";
 
 const styles = {
@@ -14,19 +15,34 @@ const styles = {
     display: "flex",
     alignItems: "center",
     "&:hover": {
-      cursor: "grab",
+      cursor: "pointer",
     },
+  },
+  totalNotSeen: {
+    height: 18,
+    minWidth: 18,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#3A8DFF",
+    marginRight: 10,
+    color: "white",
+    fontSize: 11,
+    fontWeight: "Bold",
+    borderRadius: "50%",
   },
 };
 
 class Chat extends Component {
   handleClick = async (conversation) => {
     await this.props.setActiveChat(conversation.otherUser.username);
+    await this.props.setSeenAll(conversation.otherUser.id);
   };
 
   render() {
     const { classes } = this.props;
     const otherUser = this.props.conversation.otherUser;
+    const totalNotSeen = this.props.conversation.totalNotSeen;
     return (
       <Box
         onClick={() => this.handleClick(this.props.conversation)}
@@ -39,6 +55,10 @@ class Chat extends Component {
           sidebar={true}
         />
         <ChatContent conversation={this.props.conversation} />
+        { totalNotSeen !== 0
+          ? <Typography className={classes.totalNotSeen}> {totalNotSeen} </Typography>
+          : null
+        }
       </Box>
     );
   }
@@ -49,6 +69,9 @@ const mapDispatchToProps = (dispatch) => {
     setActiveChat: (id) => {
       dispatch(setActiveChat(id));
     },
+    setSeenAll: (id) => {
+      dispatch(setSeenAll(id));
+    }
   };
 };
 
