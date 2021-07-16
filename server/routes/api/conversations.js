@@ -53,7 +53,7 @@ router.get("/", async (req, res, next) => {
       const lastAMessage = a.messages[a.messages.length - 1]
       const lastBMessage = b.messages[b.messages.length - 1]
 
-      return new Date(lastAMessage.createdAt) - new Date(lastBMessage.createdAt)
+      return new Date(lastBMessage.createdAt) - new Date(lastAMessage.createdAt)
     }
     conversations.sort(compareConvos)
     for (let i = 0; i < conversations.length; i++) {
@@ -78,7 +78,10 @@ router.get("/", async (req, res, next) => {
 
       // calculate totalNotSeen total and add it to conversations object
       let totalNotSeen = convo.messages.reduce(
-        (acc, message) => message.senderId === convoJSON.otherUser.id ? acc + 1 : acc,
+        (acc, message) => 
+        message.senderId === convoJSON.otherUser.id && !message.hasBeenSeen 
+        ? acc + 1 
+        : acc,
         0)
 
       convoJSON.totalNotSeen = totalNotSeen
