@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Box } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { withStyles } from "@material-ui/core/styles";
@@ -20,18 +20,17 @@ const styles = {
   },
 };
 
-class Chat extends Component {
-  handleClick = async (conversation) => {
-    await this.props.setActiveChat(conversation.otherUser.username);
-    await this.props.seeAllMessages(conversation.otherUser.id, conversation.id);
+const Chat = (props) => {
+  const handleClick = async (conversation) => {
+    await props.setActiveChat(conversation.otherUser.username);
+    await props.seeAllMessages(conversation.otherUser.id, conversation.id);
   };
+    const { classes } = props;
+    const otherUser = props.conversation.otherUser;
 
-  render() {
-    const { classes } = this.props;
-    const otherUser = this.props.conversation.otherUser;
     return (
       <Box
-        onClick={() => this.handleClick(this.props.conversation)}
+        onClick={() => handleClick(props.conversation)}
         className={classes.root}
       >
         <BadgeAvatar
@@ -40,10 +39,10 @@ class Chat extends Component {
           online={otherUser.online}
           sidebar={true}
         />
-        <ChatContent conversation={this.props.conversation} />
+        <ChatContent conversation={props.conversation} />
       </Box>
     );
-  }
+
 }
 
 const mapDispatchToProps = (dispatch) => {
