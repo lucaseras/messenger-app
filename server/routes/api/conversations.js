@@ -84,10 +84,20 @@ router.get("/", async (req, res, next) => {
         : acc,
         0)
 
+      // calculating lastSeenId
+      let lastSeenId = -1
+      convo.messages.forEach((message) => {
+        if (message.isSeen && message.senderId === userId){
+          lastSeenId = message.id
+        }
+      })
+
+      convoJSON.lastSeenId = lastSeenId
       convoJSON.totalNotSeen = totalNotSeen
 
       // set properties for notification count and latest message preview
       convoJSON.latestMessageText = convoJSON.messages[convoJSON.messages.length - 1].text;
+      console.log(convoJSON)
       conversations[i] = convoJSON;
     }
 
