@@ -54,7 +54,7 @@ const ChatContent = (props) => {
         </Typography>
         <Typography 
           className={classes.previewText}
-          color={totalNotSeen === 0 ? "secondary" : "black"}>
+          color={totalNotSeen === 0 ? "secondary" : "initial"}>
           {latestMessageText}
         </Typography>
       </Box>
