@@ -53,7 +53,7 @@ router.get("/", async (req, res, next) => {
       const lastAMessage = a.messages[a.messages.length - 1]
       const lastBMessage = b.messages[b.messages.length - 1]
 
-      return new Date(lastAMessage.createdAt) - new Date(lastBMessage.createdAt)
+      return new Date(lastBMessage.createdAt) - new Date(lastAMessage.createdAt)
     }
     conversations.sort(compareConvos)
     for (let i = 0; i < conversations.length; i++) {
@@ -76,8 +76,28 @@ router.get("/", async (req, res, next) => {
         convoJSON.otherUser.online = false;
       }
 
+      // calculate totalNotSeen total and add it to conversations object
+      let totalNotSeen = convo.messages.reduce(
+        (acc, message) => 
+        message.senderId === convoJSON.otherUser.id && !message.isSeen 
+        ? acc + 1 
+        : acc,
+        0)
+
+      // calculating lastSeenId
+      let lastSeenId = -1
+      convo.messages.forEach((message) => {
+        if (message.isSeen && message.senderId === userId){
+          lastSeenId = message.id
+        }
+      })
+
+      convoJSON.lastSeenId = lastSeenId
+      convoJSON.totalNotSeen = totalNotSeen
+
       // set properties for notification count and latest message preview
       convoJSON.latestMessageText = convoJSON.messages[convoJSON.messages.length - 1].text;
+      console.log(convoJSON)
       conversations[i] = convoJSON;
     }
 

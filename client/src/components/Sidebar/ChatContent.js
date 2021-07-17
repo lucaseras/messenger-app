@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography } from "@material-ui/core";
+import { Box, Typography, Badge } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -15,8 +15,11 @@ const useStyles = makeStyles((theme) => ({
   },
   previewText: {
     fontSize: 12,
-    color: "#9CADC8",
+    color: "secondary",
     letterSpacing: -0.17,
+    fontWeight: totalNotSeen => totalNotSeen > 0
+    ? "bold"
+    : "regular",
   },
   notification: {
     height: 20,
@@ -32,13 +35,16 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     borderRadius: 10,
   },
+  anchorTopRight: {
+      transform: "translate(-20px, 50%)"
+  },
 }));
 
 const ChatContent = (props) => {
-  const classes = useStyles();
-
   const { conversation } = props;
-  const { latestMessageText, otherUser } = conversation;
+  const { latestMessageText, otherUser, totalNotSeen } = conversation;
+
+  const classes = useStyles(totalNotSeen);
 
   return (
     <Box className={classes.root}>
@@ -46,10 +52,18 @@ const ChatContent = (props) => {
         <Typography className={classes.username}>
           {otherUser.username}
         </Typography>
-        <Typography className={classes.previewText}>
+        <Typography 
+          className={classes.previewText}
+          color={totalNotSeen === 0 ? "secondary" : "initial"}>
           {latestMessageText}
         </Typography>
       </Box>
+      { totalNotSeen !== 0 &&
+      <Badge 
+        className={classes.anchorTopRight} 
+        badgeContent={totalNotSeen} 
+        color="primary"/>
+      }
     </Box>
   );
 };
