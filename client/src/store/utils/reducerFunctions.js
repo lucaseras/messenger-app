@@ -1,25 +1,38 @@
+import { seeAllMessages } from "./thunkCreators"
+import store from "./../../store"
 export const addMessageToStore = (state, payload) => {
-  const { message, sender } = payload;
+  const { message, sender, activeConvo, incomingMessage } = payload;
   // if sender isn't null, that means the message needs to be put in a brand new convo
   if (sender !== null) {
     const newConvo = {
       id: message.conversationId,
       otherUser: sender,
       messages: [message],
+      totalNotSeen: 1,
+      lastSeenId: -1,
+      latestMessageText: message.text
     };
-    newConvo.latestMessageText = message.text;
     return [newConvo, ...state];
   }
 
-  return state.map((convo) => {
-    if (convo.id === message.conversationId) {
-      const convoCopy = { ...convo };
-      convoCopy.messages.push(message);
-      convoCopy.latestMessageText = message.text;
+  return state.map((oldConvo) => {
+    if (oldConvo.id === message.conversationId) {
+      const convo = { ...oldConvo };
+      if (incomingMessage) {
+        const sameConvo = (message.senderId === convo.otherUser.id && activeConvo === convo.otherUser.username)
+        if (sameConvo) {
+          convo.lastSeenId = message.id
+          store.dispatch(seeAllMessages(convo.otherUser.id, convo.id))
 
-      return convoCopy;
-    } else {
+        } else {
+        convo.totalNotSeen += 1
+        }
+      }
+      convo.messages.push(message);
+      convo.latestMessageText = message.text;
       return convo;
+    } else {
+      return oldConvo;
     }
   });
 };
@@ -97,4 +110,23 @@ export const addSeenAllToStore = (state, id) => {
       return convo
     }
   })
+}
+
+// looks for last message sent by senderId in conversationId, modifying the
+// state by adding lastSeenId (could be null) which will then be used by image
+export const setLastSeenToStore = (state, {senderId, conversationId}) => {
+  return state.map((convo) => {
+    if (convo.id !== conversationId) {
+      return convo
+    }
+    let lastSeenId = null;
+    convo.forEach((message) => {
+      if (message.senderId === senderId) {
+        lastSeenId = message.id
+      }
+    })
+    return {...convo, lastSeenId}
+  })
+
+
 }
