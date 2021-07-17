@@ -4,6 +4,7 @@ import {
   setNewMessage,
   removeOfflineUser,
   addOnlineUser,
+  setLastSeen,
 } from "./store/conversations";
 
 const socket = io(window.location.origin);
@@ -18,8 +19,16 @@ socket.on("connect", () => {
   socket.on("remove-offline-user", (id) => {
     store.dispatch(removeOfflineUser(id));
   });
-  socket.on("new-message", (data) => {
-    store.dispatch(setNewMessage(data.message, data.sender));
+  socket.on("new-message", async (data) => {
+    const activeConvo = await store.getState().activeConversation;
+    const currentUser = await store.getState().user;
+    if (currentUser.id === data.recipientId) {
+      store.dispatch(setNewMessage({ ...data, activeConvo, incomingMessage: true}));
+    }
+  });
+  socket.on("seen-last-message", (data) => {
+    store.dispatch(setLastSeen(data));
+    //store.dispatch(setNewMessage(data.message, data.sender));
   });
 });
 
