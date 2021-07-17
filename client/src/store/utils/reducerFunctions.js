@@ -21,9 +21,7 @@ export const addMessageToStore = (state, payload) => {
       if (incomingMessage) {
         const sameConvo = (message.senderId === convo.otherUser.id && activeConvo === convo.otherUser.username)
         if (sameConvo) {
-          convo.lastSeenId = message.id
           store.dispatch(seeAllMessages(convo.otherUser.id, convo.id))
-
         } else {
         convo.totalNotSeen += 1
         }
