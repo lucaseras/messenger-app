@@ -28,9 +28,6 @@ console.log(`socket id is ${socket.id}`)
     const activeConvo = await store.getState().activeConversation;
     store.dispatch(setNewMessage({ ...data, activeConvo, incomingMessage: true}));
   });
-  socket.on("seen-last-message", (data) => {
-    store.dispatch(setLastSeen(data));
-  });
 });
 
 export default socket;
