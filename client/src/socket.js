@@ -7,33 +7,30 @@ import {
   setLastSeen,
 } from "./store/conversations";
 
-const socket = io(window.location.origin);
-
 const token = localStorage.getItem("messenger-token")
 
-socket.on("connect", () => {
-  // if token exists, then the user has succeeded logging in
-  if (token) {
-    console.log("connected to server");
-    socket.on("add-online-user", (id) => {
-      store.dispatch(addOnlineUser(id));
-    });
+const socket = io(window.location.origin, {
+  query: { token }
+});
 
-    socket.on("remove-offline-user", (id) => {
-      store.dispatch(removeOfflineUser(id));
-    });
-    socket.on("new-message", async (data) => {
-      const activeConvo = await store.getState().activeConversation;
-      const currentUser = await store.getState().user;
-      if (currentUser.id === data.recipientId) {
-        store.dispatch(setNewMessage({ ...data, activeConvo, incomingMessage: true}));
-      }
-    });
-    socket.on("seen-last-message", (data) => {
-      store.dispatch(setLastSeen(data));
-      //store.dispatch(setNewMessage(data.message, data.sender));
-    });
-  }
+socket.on("connect", () => {
+console.log(`socket id is ${socket.id}`)
+  // if token exists, then the user has succeeded logging in
+  console.log("connected to server");
+  socket.on("add-online-user", (id) => {
+    store.dispatch(addOnlineUser(id));
+  });
+
+  socket.on("remove-offline-user", (id) => {
+    store.dispatch(removeOfflineUser(id));
+  });
+  socket.on("new-message", async (data) => {
+    const activeConvo = await store.getState().activeConversation;
+    store.dispatch(setNewMessage({ ...data, activeConvo, incomingMessage: true}));
+  });
+  socket.on("seen-last-message", (data) => {
+    store.dispatch(setLastSeen(data));
+  });
 });
 
 export default socket;
