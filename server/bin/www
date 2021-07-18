@@ -64,6 +64,16 @@ io.use(function(socket, next){
     }
   });
 
+  socket.on("saw-messages", (data) => {
+    if (onlineUsers[data.receiverId]) {
+      socket.to(onlineUsers[data.receiverId]).emit("saw-messages",
+        {
+          convoId: data.convoId,
+          receiverId: data.receiverId
+        })
+    }
+  })
+
   socket.on("logout", (id) => {
     if (onlineUsers[id]) {
       delete onlineUsers[id]

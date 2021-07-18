@@ -110,6 +110,23 @@ export const addSeenAllToStore = (state, id) => {
   })
 }
 
+export const addMessagesWereSeenToStore = (state, convoId, receiverId) => {
+  return state.map((convo) => {
+    if (convo.id !== convoId) {
+      return convo
+    } else {
+      const newConvo = {...convo}
+      let lastSeenId = -1
+      newConvo.messages.forEach((message) => {
+        if (message.senderId === receiverId) {
+          lastSeenId = message.id
+        }
+      })
+      return {...newConvo, lastSeenId}
+    }
+  })
+}
+
 // looks for last message sent by senderId in conversationId, modifying the
 // state by adding lastSeenId (could be null) which will then be used by image
 export const setLastSeenToStore = (state, {senderId, conversationId}) => {
@@ -125,6 +142,4 @@ export const setLastSeenToStore = (state, {senderId, conversationId}) => {
     })
     return {...convo, lastSeenId}
   })
-
-
 }

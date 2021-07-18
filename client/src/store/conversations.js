@@ -5,6 +5,7 @@ import {
   removeOfflineUserFromStore,
   addMessageToStore,
   addSeenAllToStore,
+  addMessagesWereSeenToStore,
 } from "./utils/reducerFunctions";
 
 // ACTIONS
@@ -17,6 +18,7 @@ const SET_SEARCHED_USERS = "SET_SEARCHED_USERS";
 const CLEAR_SEARCHED_USERS = "CLEAR_SEARCHED_USERS";
 const ADD_CONVERSATION = "ADD_CONVERSATION";
 const SET_SEEN_ALL = "SET_SEEN_ALL";
+const SET_MESSAGES_WERE_SEEN = "SET_MESSAGES_WERE_SEEN"
 
 // ACTION CREATORS
 
@@ -81,6 +83,14 @@ export const setSeenAll = (id) => {
   };
 };
 
+export const setMessagesWereSeen = (convoId, receiverId) => {
+  return {
+    type: SET_MESSAGES_WERE_SEEN,
+    convoId,
+    receiverId
+  }
+}
+
 
 // REDUCER
 
@@ -108,6 +118,9 @@ const reducer = (state = [], action) => {
       );
     case SET_SEEN_ALL: {
       return addSeenAllToStore(state, action.id)
+    }
+    case SET_MESSAGES_WERE_SEEN: {
+      return addMessagesWereSeenToStore(state, action.convoId, action.receiverId)
     }
     default:
       return state;
