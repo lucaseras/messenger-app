@@ -1,12 +1,12 @@
 import React from "react";
 import { Box } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { setActiveChat} from "../../store/activeConversation";
 import { seeAllMessages } from "../../store/utils/thunkCreators";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 
-const styles = {
+const useStyles = makeStyles(() => ({
   root: {
     borderRadius: 8,
     height: 80,
@@ -18,19 +18,21 @@ const styles = {
       cursor: "pointer",
     },
   },
-};
+}));
 
-const Chat = (props) => {
-  const handleClick = async (conversation) => {
-    await props.setActiveChat(conversation.otherUser.username);
-    await props.seeAllMessages(conversation.otherUser.id, conversation.id);
+const Chat = ({ conversation }) => {
+  const dispatch = useDispatch();
+  const classes = useStyles();
+
+  const handleClick = (conversation) => {
+    dispatch(setActiveChat(conversation.otherUser.username));
+    dispatch(seeAllMessages(conversation.otherUser.id, conversation.id));
   };
-    const { classes } = props;
-    const otherUser = props.conversation.otherUser;
+    const otherUser = conversation.otherUser;
 
     return (
       <Box
-        onClick={() => handleClick(props.conversation)}
+        onClick={() => handleClick(conversation)}
         className={classes.root}
       >
         <BadgeAvatar
@@ -39,21 +41,9 @@ const Chat = (props) => {
           online={otherUser.online}
           sidebar={true}
         />
-        <ChatContent conversation={props.conversation} />
+        <ChatContent conversation={conversation} />
       </Box>
     );
-
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setActiveChat: (id) => {
-      dispatch(setActiveChat(id));
-    },
-    seeAllMessages: (otherId, conversationId) => {
-      dispatch(seeAllMessages(otherId, conversationId));
-    }
-  };
-};
-
-export default connect(null, mapDispatchToProps)(withStyles(styles)(Chat));
+export default Chat;

@@ -24,31 +24,30 @@ const styles = {
   },
 };
 
-const Search = (props) => {
-  const { classes } = props;
+const Search = ({ classes, handleChange }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
   };
 
-    return (
-      <form onSubmit={handleSubmit}>
-        <FormControl fullWidth hiddenLabel>
-          <FilledInput
-            name="search"
-            onChange={props.handleChange}
-            classes={{ root: classes.filledInput, input: classes.input }}
-            disableUnderline
-            placeholder="Search"
-            startAdornment={
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            }
-          ></FilledInput>
-        </FormControl>
-      </form>
-    );
+  return (
+    <form onSubmit={handleSubmit}>
+      <FormControl fullWidth hiddenLabel>
+        <FilledInput
+          name="search"
+          onChange={handleChange}
+          classes={{ root: classes.filledInput, input: classes.input }}
+          disableUnderline
+          placeholder="Search"
+          startAdornment={
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          }
+        ></FilledInput>
+      </FormControl>
+    </form>
+  );
 
 }
 
