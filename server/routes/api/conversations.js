@@ -87,7 +87,7 @@ router.get("/", async (req, res, next) => {
       // calculating lastSeenId
       let lastSeenId = -1
       convo.messages.forEach((message) => {
-        if (message.isSeen && message.senderId === userId){
+        if (message.isSeen && message.senderId !== convoJSON.otherUser.id ){
           lastSeenId = message.id
         }
       })
