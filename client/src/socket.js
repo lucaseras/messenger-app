@@ -15,7 +15,6 @@ const socket = io(window.location.origin, {
 
 socket.on("connect", () => {
   // if token exists, then the user has succeeded logging in
-  console.log("connected to server");
   socket.on("add-online-user", (id) => {
     store.dispatch(addOnlineUser(id));
   });
