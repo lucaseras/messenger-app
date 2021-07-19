@@ -54,23 +54,25 @@ io.use(function(socket, next){
 
   socket.on("new-message", (data) => {
     if (onlineUsers[data.recipientId]) {
-      socket.to(onlineUsers[id]).emit("new-message", {
+      socket.to(onlineUsers[data.recipientId]).emit("new-message", {
       message: data.message,
       sender: data.sender,
       //new:
       recipientId: data.recipientId,
       conversationId: data.conversationId,
       });
-    } else {
-      socket.to(onlineUsers[data.sender.id]).emit("new-message", {
-      message: data.message,
-      sender: data.sender,
-      //new:
-      recipientId: data.recipientId,
-      conversationId: data.conversationId,
-      })
     }
   });
+
+  socket.on("saw-messages", (data) => {
+    if (onlineUsers[data.receiverId]) {
+      socket.to(onlineUsers[data.receiverId]).emit("saw-messages",
+        {
+          convoId: data.convoId,
+          receiverId: data.receiverId
+        })
+    }
+  })
 
   socket.on("logout", (id) => {
     if (onlineUsers[id]) {

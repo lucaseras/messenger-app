@@ -4,7 +4,7 @@ import {
   setNewMessage,
   removeOfflineUser,
   addOnlineUser,
-  setLastSeen,
+  setMessagesWereSeen,
 } from "./store/conversations";
 
 const token = localStorage.getItem("messenger-token")
@@ -14,9 +14,7 @@ const socket = io(window.location.origin, {
 });
 
 socket.on("connect", () => {
-console.log(`socket id is ${socket.id}`)
   // if token exists, then the user has succeeded logging in
-  console.log("connected to server");
   socket.on("add-online-user", (id) => {
     store.dispatch(addOnlineUser(id));
   });
@@ -28,9 +26,10 @@ console.log(`socket id is ${socket.id}`)
     const activeConvo = await store.getState().activeConversation;
     store.dispatch(setNewMessage({ ...data, activeConvo, incomingMessage: true}));
   });
-  socket.on("seen-last-message", (data) => {
-    store.dispatch(setLastSeen(data));
-  });
+  socket.on("saw-messages", (data) => {
+    const { convoId, receiverId } = data
+    store.dispatch(setMessagesWereSeen(convoId, receiverId))
+  })
 });
 
 export default socket;

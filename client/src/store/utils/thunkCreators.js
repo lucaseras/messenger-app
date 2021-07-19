@@ -125,6 +125,10 @@ export const seeAllMessages = (otherUser, conversationId) => async (dispatch) =>
   try {
     const { data } = await axios.put(`/api/messages/seen`, {otherUser, conversationId})
     dispatch(setSeenAll(data))
+    socket.emit("saw-messages", {
+      convoId: conversationId,
+      receiverId: data
+    })
   } catch (error) {
     console.error(error);
   }
