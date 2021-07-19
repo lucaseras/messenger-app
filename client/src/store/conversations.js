@@ -30,7 +30,6 @@ export const gotConversations = (conversations) => {
 };
 
 export const setNewMessage = (input) => {
-  console.log(input)
   const {message, sender, activeConvo, incomingMessage} = input
   return {
     type: SET_MESSAGE,
